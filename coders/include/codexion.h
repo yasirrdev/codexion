@@ -32,7 +32,7 @@ typedef struct s_data
 	long			time_to_refactor;
 	int				number_of_compiles_required;
 	long			dongle_cooldown;
-
+	int scheduler;
 	int				stop;
 
 	pthread_mutex_t	print_mutex;
@@ -43,5 +43,6 @@ typedef struct s_data
 
 
 long	get_time(void);
+int parse_args(t_data *data, int argc, char **argv);
 
 #endif
