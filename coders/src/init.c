@@ -47,9 +47,24 @@ int init_data(t_data *data)
         data->coders[i].id = i + 1;
         data->coders[i].last_compile = 0;
         data->coders[i].compiles_done = 0;
-
+        data->coders[i].data = data;
+        
         i++;
     }
     
     return (0);
 }
+
+void assign_dongles(t_data *data)
+{
+    int i;
+    i = 0;
+    while (i < data->number_of_coders)
+    {
+        data->coders[i].left = &data->dongles[i];
+        data->coders[i].right = &data->dongles[(i + 1)
+            % data->number_of_coders];
+        i++;
+    }
+}
+
