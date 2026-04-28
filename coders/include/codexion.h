@@ -56,7 +56,8 @@ void	assign_dongles(t_data *data);
 
 // ---------- THREADS ----------
 int		start_threads(t_data *data);
-
+void    take_dongles(t_coder *coder);
+void    release_dongles(t_coder *coder);
 // ---------- PARSE ----------
 int		parse_args(t_data *data, int argc, char **argv);
 

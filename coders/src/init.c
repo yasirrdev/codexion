@@ -1,4 +1,4 @@
-#include "../include/codexion.h"
+#include "codexion.h"
 
 
 int parse_args(t_data *data, int argc, char **argv)
