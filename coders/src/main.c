@@ -12,6 +12,6 @@ int	main(int argc, char **argv)
 	assign_dongles(&data);
 
 	start_threads(&data);
-
+	cleanup(&data);
 	return (0);
 }

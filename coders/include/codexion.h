@@ -29,8 +29,9 @@ typedef struct s_data
 	int				number_of_compiles_required;
 	long			dongle_cooldown;
 	int				scheduler;
-	int				stop;
-
+	volatile int    stop;
+	long        start_time;
+	pthread_t   monitor;
 	pthread_mutex_t	print_mutex;
 
 	t_coder			*coders;
@@ -39,15 +40,17 @@ typedef struct s_data
 
 struct s_coder
 {
-	int				id;
-	long			last_compile;
-	int				compiles_done;
-	pthread_t		thread;
+    int             id;
+    volatile long   last_compile;
+    volatile int    compiles_done;
+	volatile long   wait_start;
 
-	t_dongle		*left;
-	t_dongle		*right;
+    pthread_t       thread;
 
-	t_data			*data;
+    t_dongle        *left;
+    t_dongle        *right;
+
+    t_data          *data;
 };
 
 // ---------- INIT ----------
@@ -64,5 +67,9 @@ int		parse_args(t_data *data, int argc, char **argv);
 // ---------- UTILS ----------
 long	get_time(void);
 void	print_action(t_data *data, int id, char *msg);
+void    *monitor(void *arg);
+void interruptible_sleep(t_data *data, long ms);
+void wait_cooldown(t_dongle *dongle, t_data *data);
+void cleanup(t_data *data);
 
 #endif

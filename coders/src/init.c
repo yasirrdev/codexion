@@ -1,6 +1,21 @@
 #include "codexion.h"
 
 
+void cleanup(t_data *data)
+{
+    int i;
+
+    i = 0;
+    while (i < data->number_of_coders)
+    {
+        pthread_mutex_destroy(&data->dongles[i].mutex);
+        i++;
+    }
+    pthread_mutex_destroy(&data->print_mutex);
+    free(data->coders);
+    free(data->dongles)
+}
+
 int parse_args(t_data *data, int argc, char **argv)
 {
     if(argc != 9)
