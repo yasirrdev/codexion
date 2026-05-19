@@ -6,24 +6,12 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:54:15 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 13:03:22 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/05/19 13:58:10 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	interruptible_sleep(t_data *data, long ms)
-{
-	long	start;
-
-	start = get_time();
-	while (get_time() - start < ms)
-	{
-		if (data->stop)
-			return ;
-		usleep(1000);
-	}
-}
 
 void	interruptible_sleep(t_data *data, long ms)
 {
