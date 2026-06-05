@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:40:49 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 12:46:54 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/05 13:56:34 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int	is_most_urgent_edf(t_coder *coder)
 			their_remaining = data->time_to_burnout - (get_time()
 					- data->coders[i].last_compile);
 			if (their_remaining < my_remaining)
+				return (0);
+			else if (their_remaining == my_remaining && data->coders[i].id > coder->id)
 				return (0);
 		}
 		i++;

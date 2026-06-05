@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:47:19 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 12:53:56 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/05 13:55:37 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,20 @@ static void	take_odd_dongles(t_coder *coder)
 	print_action(coder->data, coder->id, "has taken a dongle");
 }
 
-void	take_dongles(t_coder *coder)
+int	take_dongles(t_coder *coder)
 {
 	if (coder->left == coder->right)
-		return ;
+		return (0);
 	coder->wait_start = get_time();
-	wait_for_scheduler(coder);
+	wait_scheduler(coder);
 	if (coder->data->stop)
-		return ;
+		return (0);
 	if (coder->id % 2 == 0)
 		take_even_dongles(coder);
 	else
 		take_odd_dongles(coder);
 	coder->wait_start = 0;
+	return (1);
 }
 
 void	release_dongles(t_coder *coder)

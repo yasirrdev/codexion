@@ -41,6 +41,10 @@ int	parse_args(t_data *data, int argc, char **argv)
 	data->time_to_refactor = atoi(argv[5]);
 	data->number_of_compiles_required = atoi(argv[6]);
 	data->dongle_cooldown = atoi(argv[7]);
+	if (data->number_of_coders < 1 || data->time_to_burnout < 0 || data->time_to_compile < 0
+		|| data->time_to_debug < 0 || data->time_to_refactor < 0
+		|| data->number_of_compiles_required < 1 || data->dongle_cooldown < 0)
+		return (printf("Error: invalid argument values\n"), 1);
 	if (strcmp(argv[8], "fifo") == 0)
 		data->scheduler = 0;
 	else if (strcmp(argv[8], "edf") == 0)

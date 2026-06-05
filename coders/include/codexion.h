@@ -67,10 +67,10 @@ int		start_threads(t_data *data);
 void	*monitor(void *arg);
 void	*routine(void *arg);
 
-void	take_dongles(t_coder *coder);
+int		take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 void	wait_cooldown(t_dongle *dongle, t_data *data);
-void	wait_for_scheduler(t_coder *coder);
+void	wait_scheduler(t_coder *coder);
 void	interruptible_sleep(t_data *data, long ms);
 
 long	get_time(void);

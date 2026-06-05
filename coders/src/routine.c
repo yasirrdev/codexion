@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:54:15 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 13:58:10 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/05 13:49:14 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static int	do_compile_cycle(t_coder *coder, t_data *data)
 	print_action(data, coder->id, "is compiling");
 	interruptible_sleep(data, data->time_to_compile);
 	coder->compiles_done++;
-	coder->last_compile = get_time();
 	release_dongles(coder);
 	if (data->stop || coder->compiles_done == data->number_of_compiles_required)
 		return (1);
