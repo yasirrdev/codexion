@@ -28,6 +28,7 @@ void	cleanup(t_data *data)
 	pthread_mutex_destroy(&data->print_mutex);
 	free(data->coders);
 	free(data->dongles);
+	free(data->sched_heap);
 }
 
 int	parse_args(t_data *data, int argc, char **argv)
@@ -62,8 +63,9 @@ int	init_data(t_data *data)
 
 	data->coders = malloc(sizeof(t_coder) * data->number_of_coders);
 	data->dongles = malloc(sizeof(t_dongle) * data->number_of_coders);
-	if (!data->coders || !data->dongles)
+	if (!data->sched_heap)
 		return (1);
+	data->heap_size = 0;
 	pthread_mutex_init(&data->print_mutex, NULL);
 	i = 0;
 	while (i < data->number_of_coders)

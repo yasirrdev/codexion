@@ -44,6 +44,9 @@ typedef struct s_data
 	pthread_mutex_t	print_mutex;
 	t_coder			*coders;
 	t_dongle		*dongles;
+	pthread_mutex_t	heap_mutex;
+	t_coder			**sched_heap;
+	int				heap_size;
 }	t_data;
 
 struct s_coder
@@ -75,5 +78,12 @@ void	interruptible_sleep(t_data *data, long ms);
 
 long	get_time(void);
 void	print_action(t_data *data, int id, char *msg);
+
+int		heap_compare(t_coder *a, t_coder *b, t_data *data);
+void	heap_swap(t_data *data, int i, int j);
+void	heap_sift_up(t_data *data, int i);
+void	heap_sift_down(t_data *data, int i);
+void	heap_push(t_data *data, t_coder *coder);
+void	heap_remove(t_data *data, t_coder *coder);
 
 #endif

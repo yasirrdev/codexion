@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:47:19 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/05 13:55:37 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/05 14:02:28 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,40 @@ void	wait_cooldown(t_dongle *dongle, t_data *data)
 	}
 }
 
-static void	take_even_dongles(t_coder *coder)
+static int	take_even_dongles(t_coder *coder)
 {
 	wait_cooldown(coder->left, coder->data);
 	if (coder->data->stop)
-		return ;
+		return (0);
 	pthread_mutex_lock(&coder->left->mutex);
 	print_action(coder->data, coder->id, "has taken a dongle");
 	wait_cooldown(coder->right, coder->data);
 	if (coder->data->stop)
 	{
 		pthread_mutex_unlock(&coder->left->mutex);
-		return ;
+		return (0);
 	}
 	pthread_mutex_lock(&coder->right->mutex);
 	print_action(coder->data, coder->id, "has taken a dongle");
+	return (1);
 }
 
-static void	take_odd_dongles(t_coder *coder)
+static int	take_odd_dongles(t_coder *coder)
 {
 	wait_cooldown(coder->right, coder->data);
 	if (coder->data->stop)
-		return ;
+		return (0);
 	pthread_mutex_lock(&coder->right->mutex);
 	print_action(coder->data, coder->id, "has taken a dongle");
 	wait_cooldown(coder->left, coder->data);
 	if (coder->data->stop)
 	{
 		pthread_mutex_unlock(&coder->right->mutex);
-		return ;
+		return (0);
 	}
 	pthread_mutex_lock(&coder->left->mutex);
 	print_action(coder->data, coder->id, "has taken a dongle");
+	return (1);
 }
 
 int	take_dongles(t_coder *coder)
@@ -65,11 +67,8 @@ int	take_dongles(t_coder *coder)
 	if (coder->data->stop)
 		return (0);
 	if (coder->id % 2 == 0)
-		take_even_dongles(coder);
-	else
-		take_odd_dongles(coder);
-	coder->wait_start = 0;
-	return (1);
+		return (take_even_dongles(coder));
+	return (take_odd_dongles(coder));
 }
 
 void	release_dongles(t_coder *coder)
