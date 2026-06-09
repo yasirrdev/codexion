@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:47:19 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/05 14:02:28 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/09 12:40:12 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,18 @@ static int	take_odd_dongles(t_coder *coder)
 int	take_dongles(t_coder *coder)
 {
 	if (coder->left == coder->right)
-		return (0);
+	{
+		coder->wait_start = get_time();
+		wait_scheduler(coder);
+		if (coder->data->stop)
+			return (0);
+		wait_cooldown(coder->left, coder->data);
+		if (coder->data->stop)
+			return (0);
+		pthread_mutex_lock(&coder->left->mutex);
+		print_action(coder->data, coder->id, "has taken a dongle");
+		return (1);
+	}
 	coder->wait_start = get_time();
 	wait_scheduler(coder);
 	if (coder->data->stop)
@@ -74,6 +85,11 @@ int	take_dongles(t_coder *coder)
 void	release_dongles(t_coder *coder)
 {
 	coder->left->last_used = get_time();
+	if (coder->left == coder->right)
+	{
+		pthread_mutex_unlock(&coder->left->mutex);
+		return ;
+	}
 	coder->right->last_used = get_time();
 	pthread_mutex_unlock(&coder->left->mutex);
 	pthread_mutex_unlock(&coder->right->mutex);

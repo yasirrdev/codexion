@@ -42,7 +42,8 @@ int	parse_args(t_data *data, int argc, char **argv)
 	data->time_to_refactor = atoi(argv[5]);
 	data->number_of_compiles_required = atoi(argv[6]);
 	data->dongle_cooldown = atoi(argv[7]);
-	if (data->number_of_coders < 1 || data->time_to_burnout < 0 || data->time_to_compile < 0
+	if (data->number_of_coders < 1 || data->time_to_burnout < 0
+		|| data->time_to_compile < 0
 		|| data->time_to_debug < 0 || data->time_to_refactor < 0
 		|| data->number_of_compiles_required < 1 || data->dongle_cooldown < 0)
 		return (printf("Error: invalid argument values\n"), 1);
@@ -66,8 +67,10 @@ int	init_data(t_data *data)
 	data->sched_heap = malloc(sizeof(t_coder *) * data->number_of_coders);
 	if (!data->sched_heap || !data->coders || !data->dongles)
 		return (1);
+	data->stop = 0;
 	data->heap_size = 0;
 	pthread_mutex_init(&data->print_mutex, NULL);
+	pthread_mutex_init(&data->heap_mutex, NULL);
 	i = 0;
 	while (i < data->number_of_coders)
 	{

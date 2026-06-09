@@ -6,12 +6,11 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:54:15 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/09 12:29:47 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/09 12:43:52 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
 
 void	interruptible_sleep(t_data *data, long ms)
 {

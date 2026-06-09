@@ -3,19 +3,19 @@ NAME = codexion
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRC = coders/src/main.c \
-      coders/src/init.c \
-      coders/src/threads.c \
-      coders/src/dongles.c \
-      coders/src/heap.c \
-      coders/src/scheduler.c \
-      coders/src/monitor.c \
-      coders/src/routine.c \
-      coders/src/utils.c
+SRC = src/main.c \
+      src/init.c \
+      src/threads.c \
+      src/dongles.c \
+      src/heap.c \
+      src/scheduler.c \
+      src/monitor.c \
+      src/routine.c \
+      src/utils.c
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDE = -I coders/include
+INCLUDE = -I include
 
 all: $(NAME)
 

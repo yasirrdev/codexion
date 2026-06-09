@@ -6,109 +6,96 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 14:09:19 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/09 12:28:43 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/09 13:24:04 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "codexion.h"
 
-int heap_compare(t_coder *a, t_coder *b, t_data *data)
+int	heap_compare(t_coder *a, t_coder *b, t_data *data)
 {
-	if(data->scheduler == 0)
+	if (data->scheduler == 0)
 	{
-		if(a->wait_start != b->wait_start)
+		if (a->wait_start != b->wait_start)
 			return (a->wait_start < b->wait_start);
-		
 		return (a->id < b->id);
 	}
-	if(a->last_compile != b->last_compile)
+	if (a->last_compile != b->last_compile)
 		return (a->last_compile < b->last_compile);
 	return (a->id > b->id);
 }
 
-void	heap_swap(t_data *data, int i, int j)
+void	heap_sift_up(t_data *data, int i)
 {
-	t_coder *temp;
-	
-	temp = data->sched_heap[i];
-	data->sched_heap[i] = data->sched_heap[j];
-	data->sched_heap[j] = temp;
-}
+	int	parent;
+	t_coder	*tmp;
 
-void heap_sift_up(t_data *data, int i)
-{
-	int parent;
-
-	while(i > 0)
+	while (i > 0)
 	{
 		parent = (i - 1) / 2;
-
 		if (heap_compare(data->sched_heap[i], data->sched_heap[parent], data))
 		{
-			heap_swap(data, i, parent);
+			tmp = data->sched_heap[i];
+			data->sched_heap[i] = data->sched_heap[parent];
+			data->sched_heap[parent] = tmp;
 			i = parent;
 		}
 		else
-			break;
+			break ;
 	}
 }
 
-void heap_sift_down(t_data *data, int i)
+void	heap_sift_down(t_data *data, int i)
 {
-	int left;
-	int right;
-	int best;
+	int	left;
+	int	right;
+	int	best;
+	t_coder	*tmp;
 
-	while(1)
+	while (1)
 	{
 		left = 2 * i + 1;
 		right = 2 * i + 2;
 		best = i;
-
 		if (left < data->heap_size
-			&& heap_compare(data->sched_heap[left], data->sched_heap[best], data))
+			&& heap_compare(
+				data->sched_heap[left], data->sched_heap[best], data))
 			best = left;
 		if (right < data->heap_size
-			&& heap_compare(data->sched_heap[right], data->sched_heap[best], data
-			))
+			&& heap_compare(
+				data->sched_heap[right], data->sched_heap[best], data))
 			best = right;
 		if (best == i)
-			break;
-		heap_swap(data, i, best);
+			break ;
+		tmp = data->sched_heap[i];
+		data->sched_heap[i] = data->sched_heap[best];
+		data->sched_heap[best] = tmp;
 		i = best;
 	}
 }
 
-void heap_push(t_data *data, t_coder *coder)
+void	heap_push(t_data *data, t_coder *coder)
 {
 	pthread_mutex_lock(&data->heap_mutex);
-	data->sched_heap[data->heap_size] = coder;
-	data->heap_size++;
+	data->sched_heap[data->heap_size++] = coder;
 	heap_sift_up(data, data->heap_size - 1);
 	pthread_mutex_unlock(&data->heap_mutex);
 }
 
-void heap_remove(t_data *data, t_coder *coder)
+void	heap_remove(t_data *data, t_coder *coder)
 {
-	int i;
+	int	i;
 
 	pthread_mutex_lock(&data->heap_mutex);
 	i = 0;
 	while (i < data->heap_size && data->sched_heap[i]->id != coder->id)
-		 i++;
-
-	if (i>= data->heap_size)
+		i++;
+	if (i >= data->heap_size)
 	{
 		pthread_mutex_unlock(&data->heap_mutex);
 		return ;
 	}
-	if (i < data->heap_size)
-	{
-		data->sched_heap[i] = data->sched_heap[data->heap_size - 1];
-		data->heap_size--;
-		heap_sift_down(data, i);
-	}
+	data->heap_size--;
 	if (i < data->heap_size)
 	{
 		data->sched_heap[i] = data->sched_heap[data->heap_size];
@@ -117,4 +104,3 @@ void heap_remove(t_data *data, t_coder *coder)
 	}
 	pthread_mutex_unlock(&data->heap_mutex);
 }
-
