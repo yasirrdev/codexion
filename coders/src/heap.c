@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 14:09:19 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/05 15:14:11 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/09 12:28:43 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,19 +95,20 @@ void heap_remove(t_data *data, t_coder *coder)
 
 	pthread_mutex_lock(&data->heap_mutex);
 	i = 0;
-
-	while(i < data->heap_size && data->sched_heap[i] != coder->id)
+	while (i < data->heap_size && data->sched_heap[i]->id != coder->id)
 		 i++;
 
 	if (i>= data->heap_size)
-		return(pthread_mutex_unlock(&data->heap_mutex));
+	{
+		pthread_mutex_unlock(&data->heap_mutex);
+		return ;
+	}
 	if (i < data->heap_size)
 	{
 		data->sched_heap[i] = data->sched_heap[data->heap_size - 1];
 		data->heap_size--;
 		heap_sift_down(data, i);
 	}
-	data->heap_size--;
 	if (i < data->heap_size)
 	{
 		data->sched_heap[i] = data->sched_heap[data->heap_size];

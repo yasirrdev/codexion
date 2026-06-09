@@ -6,7 +6,7 @@
 /*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/19 12:54:15 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/06/05 14:05:54 by ybel-maa         ###   ########.fr       */
+/*   Updated: 2026/06/09 12:29:47 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	interruptible_sleep(t_data *data, long ms)
 	}
 }
 
-static int	do_idle_cycle(t_coder *coder, t_data *data)
+static void	do_idle_cycle(t_coder *coder, t_data *data)
 {
 	print_action(data, coder->id, "is debugging");
 	interruptible_sleep(data, data->time_to_debug);

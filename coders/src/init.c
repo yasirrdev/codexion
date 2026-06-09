@@ -63,7 +63,8 @@ int	init_data(t_data *data)
 
 	data->coders = malloc(sizeof(t_coder) * data->number_of_coders);
 	data->dongles = malloc(sizeof(t_dongle) * data->number_of_coders);
-	if (!data->sched_heap)
+	data->sched_heap = malloc(sizeof(t_coder *) * data->number_of_coders);
+	if (!data->sched_heap || !data->coders || !data->dongles)
 		return (1);
 	data->heap_size = 0;
 	pthread_mutex_init(&data->print_mutex, NULL);
