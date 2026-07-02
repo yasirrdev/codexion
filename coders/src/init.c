@@ -2,16 +2,14 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2026/05/19 12:29:15 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 12:29:15 by ybel-maa         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybel-maa <ybel-maa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/02 16:06:58 by ybel-maa          #+#    #+#             */
+/*   Updated: 2026/07/02 16:06:58 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "codexion.h"
 
@@ -26,6 +24,7 @@ void	cleanup(t_data *data)
 		i++;
 	}
 	pthread_mutex_destroy(&data->print_mutex);
+	pthread_mutex_destroy(&data->heap_mutex);
 	free(data->coders);
 	free(data->dongles);
 	free(data->sched_heap);
@@ -43,9 +42,9 @@ int	parse_args(t_data *data, int argc, char **argv)
 	data->number_of_compiles_required = atoi(argv[6]);
 	data->dongle_cooldown = atoi(argv[7]);
 	if (data->number_of_coders < 1 || data->time_to_burnout < 0
-		|| data->time_to_compile < 0
-		|| data->time_to_debug < 0 || data->time_to_refactor < 0
-		|| data->number_of_compiles_required < 1 || data->dongle_cooldown < 0)
+		|| data->time_to_compile < 0 || data->time_to_debug < 0
+		|| data->time_to_refactor < 0 || data->number_of_compiles_required < 1
+		|| data->dongle_cooldown < 0)
 		return (printf("Error: invalid argument values\n"), 1);
 	if (strcmp(argv[8], "fifo") == 0)
 		data->scheduler = 0;
@@ -53,8 +52,6 @@ int	parse_args(t_data *data, int argc, char **argv)
 		data->scheduler = 1;
 	else
 		return (printf("Error: invalid scheduler\n"), 1);
-	if (data->number_of_coders <= 0)
-		return (printf("Error: invalid number_of_coders\n"), 1);
 	return (0);
 }
 
@@ -65,7 +62,7 @@ int	init_data(t_data *data)
 	data->coders = malloc(sizeof(t_coder) * data->number_of_coders);
 	data->dongles = malloc(sizeof(t_dongle) * data->number_of_coders);
 	data->sched_heap = malloc(sizeof(t_coder *) * data->number_of_coders);
-	if (!data->sched_heap || !data->coders || !data->dongles)
+	if (!data->coders || !data->dongles || !data->sched_heap)
 		return (1);
 	data->stop = 0;
 	data->heap_size = 0;
@@ -79,6 +76,7 @@ int	init_data(t_data *data)
 		data->coders[i].id = i + 1;
 		data->coders[i].last_compile = 0;
 		data->coders[i].compiles_done = 0;
+		data->coders[i].wait_start = 0;
 		data->coders[i].data = data;
 		i++;
 	}

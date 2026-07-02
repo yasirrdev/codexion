@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybel-maa <ybel-maa@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: ybel-maa <ybel-maa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/19 13:22:32 by ybel-maa          #+#    #+#             */
-/*   Updated: 2026/05/19 13:22:32 by ybel-maa         ###   ########.fr       */
+/*   Created: 2026/07/02 16:06:11 by ybel-maa          #+#    #+#             */
+/*   Updated: 2026/07/02 16:06:11 by ybel-maa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CODEXION_H
 # define CODEXION_H
@@ -42,11 +43,11 @@ typedef struct s_data
 	long			start_time;
 	pthread_t		monitor;
 	pthread_mutex_t	print_mutex;
-	t_coder			*coders;
-	t_dongle		*dongles;
 	pthread_mutex_t	heap_mutex;
 	t_coder			**sched_heap;
 	int				heap_size;
+	t_coder			*coders;
+	t_dongle		*dongles;
 }	t_data;
 
 struct s_coder
@@ -61,29 +62,39 @@ struct s_coder
 	t_data			*data;
 };
 
+/* ---------- init.c ---------- */
+int		parse_args(t_data *data, int argc, char **argv);
 int		init_data(t_data *data);
 void	assign_dongles(t_data *data);
-int		parse_args(t_data *data, int argc, char **argv);
 void	cleanup(t_data *data);
 
+/* ---------- threads.c ---------- */
 int		start_threads(t_data *data);
-void	*monitor(void *arg);
-void	*routine(void *arg);
 
+/* ---------- routine.c ---------- */
+void	*routine(void *arg);
+void	interruptible_sleep(t_data *data, long ms);
+
+/* ---------- monitor.c ---------- */
+void	*monitor(void *arg);
+
+/* ---------- dongles.c ---------- */
 int		take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 void	wait_cooldown(t_dongle *dongle, t_data *data);
-void	wait_scheduler(t_coder *coder);
-void	interruptible_sleep(t_data *data, long ms);
 
-long	get_time(void);
-void	print_action(t_data *data, int id, char *msg);
-
+/* ---------- heap.c ---------- */
 int		heap_compare(t_coder *a, t_coder *b, t_data *data);
-void	heap_swap(t_data *data, int i, int j);
 void	heap_sift_up(t_data *data, int i);
 void	heap_sift_down(t_data *data, int i);
 void	heap_push(t_data *data, t_coder *coder);
 void	heap_remove(t_data *data, t_coder *coder);
+
+/* ---------- scheduler.c ---------- */
+void	wait_scheduler(t_coder *coder);
+
+/* ---------- utils.c ---------- */
+long	get_time(void);
+void	print_action(t_data *data, int id, char *msg);
 
 #endif
